@@ -1,8 +1,5 @@
-Template v1
-
 Naam van het spel: Pallet Panic – Party Edition  
-Ontwikkelaars:  
-Schrijf hier de namen van je team  
+Ontwikkelaars: 
 
 Korte samenvatting  
 Pallet Panic – Party Edition is een snel en chaotisch kaartspel waarin spelers strijden om de titel van “Werknemer van de Maand”. Je verzamelt pallets op basis van kleur of gewicht, probeert slimme ruilen te maken en roept luid “Biep-biep!” wanneer je een bestelling voltooit. Met simpele regels, korte speelduur en veel interactie is dit het ideale 15-minutenspel vol humor en lichte sabotage.
@@ -58,3 +55,4 @@ Afbeeldingen en foto's van:
 - het speelveld met stapel en markt  
 - een voorbeeld van een startopstelling met 5 kaarten per speler  
 - een speler die een set van 4 blauwe pallets inwisselt en “Biep-biep!” roept om muntjes te verdienen  
+
