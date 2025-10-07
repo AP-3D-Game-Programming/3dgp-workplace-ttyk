@@ -10,7 +10,8 @@ Pallet Panic – Party Edition is een snel en chaotisch kaartspel waarin spelers
 - 120 Palletkaarten (8 kleuren)
   - 15 Rood - 15 Blauw - 15 Geel - 15 Groen
   - 15 Zwart - 15 Paars - 15 Oranje - 15 Bruin
-- 20 Actiekaarten (speciale effecten)
+- 30 Actiekaarten (speciale effecten)
+- 1 Dobbelsteen (6-zijdig)
 - Muntjes of fiches (als geld)  
 - 1 Vorkheftruck-token (markeert de actieve speler)
 
@@ -19,10 +20,11 @@ Verzamel sets van pallets en lever ze af voordat anderen je dwarsbomen. De spele
 
 ## Voorbereiding
 
-- Schud alle 120 palletkaarten en 20 actiekaarten samen tot één deck.
-- Iedere speler krijgt **4 palletkaarten** (in plaats van 5).
+- Schud alle 120 palletkaarten tot één deck.
+- Leg de 30 actiekaarten als een aparte stapel naast het speelveld.
+- Iedere speler krijgt **4 palletkaarten**.
 - **BELANGRIJK VERSCHIL:** Je mag je handkaarten **op elke volgorde houden en spelen** - je hebt vrije keuze!
-- Leg de overige kaarten als gedekte trekstapel in het midden van de tafel.
+- Leg de overige palletkaarten als gedekte trekstapel in het midden van de tafel.
 - Leg **3 kaarten open** naast de stapel als de **"Laadzone"**.
 - Iedere speler heeft **drie magazijnvakken** (gebruik bijvoorbeeld drie vakken op tafel).
 - De jongste speler krijgt de vorkheftruck-token en begint.
@@ -58,11 +60,12 @@ Het spel verloopt in beurten. Tijdens jouw beurt voer je **drie acties** uit in 
 ### **Na je drie acties:**
 - Vul je hand aan tot **4 kaarten** (trek van de stapel)
 - Vul de Laadzone aan tot **3 kaarten**
+- **🎲 GOOI DE DOBBELSTEEN:** Bij een **5 of 6** mag je een actiekaart trekken van de actiestapel!
 - Geef de vorkheftruck-token door naar links
 
 ## Actiekaarten - DE TWIST! 🔥
 
-Wanneer je een actiekaart trekt, mag je deze **direct** gebruiken of bewaren voor later. Actiekaarten tellen mee in je handlimiet van 4 kaarten.
+Actiekaarten verkrijg je door geluk met de dobbelsteen! Je mag ze **direct** gebruiken of bewaren voor later. Actiekaarten tellen **NIET** mee in je handlimiet van 4 kaarten - bewaar ze apart naast je speelveld.
 
 **Voorbeelden van actiekaarten:**
 
@@ -74,6 +77,8 @@ Wanneer je een actiekaart trekt, mag je deze **direct** gebruiken of bewaren voo
 - **⚡ Turboshift:** Voer 5 acties uit in plaats van 3 deze beurt
 - **🔁 Retour:** Haal tot 3 kaarten terug uit de Laadzone
 - **💰 Bonus:** Ontvang direct 1 muntje
+- **🎲 Geluksdag:** Gooi de dobbelsteen opnieuw aan het einde van je beurt (stapelt met andere worpen)
+- **🔒 Kluis:** Bescherm één van je magazijnvakken tot je volgende beurt - niemand kan het aanvallen
 
 ## Magazijnvakken strategie
 
@@ -86,7 +91,7 @@ Wanneer je een actiekaart trekt, mag je deze **direct** gebruiken of bewaren voo
 
 Het spel eindigt wanneer:
 - De **trekstapel voor de tweede keer op is** (schud de Laadzone opnieuw als trekstapel bij eerste keer opraken), OF
-- Een speler **10 muntjes** heeft verzameld (in plaats van 7)
+- Een speler **10 muntjes** heeft verzameld
 
 **Eindtelling:**
 - Tel alle muntjes
@@ -98,22 +103,5 @@ De speler met de meeste muntjes wint en wordt gekroond tot **"Werknemer van de M
 
 ## Tips voor beginners
 
-1. **Gebruik de Laadzone:** Dit is niet alleen een plek om kaarten te dumpen, maar ook om anderen te helpen (of af te leiden!)
-2. **Bewaar actiekaarten:** Gebruik ze op het perfecte moment om een tegenstander te blokkeren of jezelf te redden
-3. **Denk in combo's:** Probeer meerdere sets tegelijk af te leveren voor de bonusmuntje
-4. **Let op anderen:** Als iemand bijna een grote set heeft, speel een "Ongeluk!" kaart!
-5. **Wees flexibel:** Omdat je magazijnvakken kunt leegmaken, kun je sneller switchen tussen strategieën
-
-## Optionele varianten
-
-- **🏃 Speedmode:** Speel met een 10-minuten timer - wie dan de meeste muntjes heeft wint
-- **🎲 Chaos-mode:** Trek 5 kaarten per beurt in plaats van aanvullen tot 4
-- **🏆 Team-versie:** Speel in teams van 2 - deel geen kaarten maar wel muntjes
-
-## Bijlagen  
-
-Afbeeldingen en foto's van:  
-- Het speelveld met trekstapel, Laadzone en vorkheftruck-token
-- Een voorbeeld van een startopstelling met 4 kaarten per speler en 3 magazijnvakken
-- Voorbeelden van verschillende actiekaarten
-- Een speler die een combobonus krijgt door 2 sets tegelijk af te leveren
+1. **Gebruik de Laadzone:** Dit is niet alleen een plek om kaarten te dumpen, maar ook om anderen te helpen (
+
