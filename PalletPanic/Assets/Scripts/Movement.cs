@@ -10,6 +10,7 @@ public class Movement : MonoBehaviour
 
     //beweeg lift
     private Transform lift;
+    private Rigidbody vehicleRb;
     private float maxLiftHeight = 9;
     private float minLiftHeight = 2.2f;
     private float liftSpeed = 3;
@@ -19,6 +20,7 @@ public class Movement : MonoBehaviour
     void Start()
     {
         lift = transform.Find("Lift");
+        vehicleRb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -28,8 +30,14 @@ public class Movement : MonoBehaviour
         forwardInput = Input.GetAxis("Vertical");
 
         //move the vehicle forward
-        transform.Translate(Vector3.forward * Time.deltaTime * speed * forwardInput);
-        transform.Rotate(Vector3.up, Time.deltaTime * turnSpeed * horizontalInput);
+
+        Vector3 movement = transform.forward * speed * forwardInput;
+        vehicleRb.MovePosition(vehicleRb.position + movement * Time.fixedDeltaTime);
+
+        //rotate met Rigidbody
+        float rotation = turnSpeed * horizontalInput * Time.fixedDeltaTime;
+        Quaternion turnRotation = Quaternion.Euler(0f, rotation, 0f);
+        vehicleRb.MoveRotation(vehicleRb.rotation * turnRotation);
 
         //move lift up or down
         if (Input.GetKey(KeyCode.Q) == true && lift.transform.position.y < maxLiftHeight)

@@ -1256,6 +1256,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6430360300848639442, guid: 13260d4940173524ba74b45e0709bcae, type: 3}
+      propertyPath: m_Interpolate
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6430360300848639442, guid: 13260d4940173524ba74b45e0709bcae, type: 3}
+      propertyPath: m_IsKinematic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6430360300848639442, guid: 13260d4940173524ba74b45e0709bcae, type: 3}
+      propertyPath: m_LinearDamping
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6430360300848639442, guid: 13260d4940173524ba74b45e0709bcae, type: 3}
+      propertyPath: m_AngularDamping
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:
