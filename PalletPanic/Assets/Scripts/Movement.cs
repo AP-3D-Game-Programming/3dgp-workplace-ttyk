@@ -11,16 +11,20 @@ public class Movement : MonoBehaviour
     //beweeg lift
     private Transform lift;
     private Rigidbody vehicleRb;
-    private float maxLiftHeight = 9;
-    private float minLiftHeight = 2.2f;
+
+    private float maxLiftHeight = 6;
+    private float minLiftHeight = -0.8f;
     private float liftSpeed = 3;
 
+    private float initialLiftY;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         lift = transform.Find("Lift");
         vehicleRb = GetComponent<Rigidbody>();
+
+        initialLiftY = lift.localPosition.y;
     }
 
     // Update is called once per frame
@@ -40,13 +44,15 @@ public class Movement : MonoBehaviour
         vehicleRb.MoveRotation(vehicleRb.rotation * turnRotation);
 
         //move lift up or down
-        if (Input.GetKey(KeyCode.Q) == true && lift.transform.position.y < maxLiftHeight)
+        Vector3 localPos = lift.localPosition;
+
+        if (Input.GetKey(KeyCode.Q) && localPos.y < initialLiftY + maxLiftHeight)
         {
-            lift.transform.Translate(Vector3.up * liftSpeed * Time.deltaTime);
+            lift.localPosition += Vector3.up * liftSpeed * Time.deltaTime;
         }
-        if (Input.GetKey(KeyCode.E) == true && lift.transform.position.y > minLiftHeight)
+        if (Input.GetKey(KeyCode.E) && localPos.y > initialLiftY + minLiftHeight)
         {
-            lift.transform.Translate(Vector3.down * liftSpeed * Time.deltaTime);
+            lift.localPosition += Vector3.down * liftSpeed * Time.deltaTime;
         }
 
     }
