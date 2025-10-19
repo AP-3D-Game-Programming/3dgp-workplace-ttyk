@@ -65,7 +65,7 @@ public class OrderSystem : MonoBehaviour
 
     // Difficulty settings
     private int minPalletsPerStack = 1;
-    private int maxPalletsPerStack = 4;
+    private int maxPalletsPerStack = 2;
     private int numberOfStacks = 1;
 
     public Order currentOrder;

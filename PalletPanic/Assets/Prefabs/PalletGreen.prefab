@@ -288,4 +288,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8c6ae1ab281db94db31e325b9cdbc9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pallet
-  palletColor: 0
+  palletColor: 2
