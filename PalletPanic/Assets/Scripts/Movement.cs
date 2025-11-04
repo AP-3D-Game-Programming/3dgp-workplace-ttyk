@@ -57,6 +57,7 @@ public class Movement : MonoBehaviour
         if (attachedPallet != null)
         {
             attachedPallet.MovePosition(attachedPallet.position + movement * Time.fixedDeltaTime);
+            attachedPallet.MoveRotation(attachedPallet.rotation * turnRotation);
         }
 
         //move lift up or down
@@ -64,11 +65,11 @@ public class Movement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Q) && localPos.y < initialLiftY + maxLiftHeight)
         {
-            lift.localPosition += Vector3.up * liftSpeed * Time.deltaTime;
+            lift.localPosition += Vector3.up * liftSpeed * Time.fixedDeltaTime;
         }
         if (Input.GetKey(KeyCode.E) && localPos.y > initialLiftY + minLiftHeight)
         {
-            lift.localPosition += Vector3.down * liftSpeed * Time.deltaTime;
+            lift.localPosition += Vector3.down * liftSpeed * Time.fixedDeltaTime;
         }
     }
 
