@@ -119,6 +119,71 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &180503769 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4131145200495541310, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+  m_PrefabInstance: {fileID: 231509933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &231509933
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -37.92566
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 29.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 456.95865
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 127714803682047453, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4131145200495541310, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      propertyPath: m_Name
+      value: Forklift
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1214680892767501598, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1583019140}
+  m_SourcePrefab: {fileID: 100100000, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
 --- !u!1001 &288739538
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,7 +275,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraToggle
   firstPersonCameraObject: {fileID: 1352061351}
-  thirdPersonCamera: {fileID: 0}
+  thirdPersonCamera: {fileID: 1583019139}
 --- !u!4 &436871539
 Transform:
   m_ObjectHideFlags: 0
@@ -644,7 +709,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d60b382a0250e0842817065d7eac0de3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::FollowVehicle
-  vehicle: {fileID: 0}
+  vehicle: {fileID: 180503769}
   mouseSensitivity: 100
   clampAngle: 80
 --- !u!114 &1352061356
@@ -744,6 +809,30 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!1 &1583019135 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1214680892767501598, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+  m_PrefabInstance: {fileID: 231509933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1583019139 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 839364925819829524, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
+  m_PrefabInstance: {fileID: 231509933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1583019140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583019135}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7783d2ac9e769cf4399b36bccaa60814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ThirdPersonCameraControl
+  mouseSensitivity: 100
+  maxVerticalAngle: 60
 --- !u!1 &1623969661
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,3 +1035,4 @@ SceneRoots:
   - {fileID: 1330667824}
   - {fileID: 910847314}
   - {fileID: 436871539}
+  - {fileID: 231509933}
