@@ -2,36 +2,39 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
-    //forklift movement
-    private float speed = 5.0f;
-    private float turnSpeed = 50;
+    //input
     private float horizontalInput;
     private float forwardInput;
+    private const float INPUT_THRESHOLD = 0.1f;
 
-    //lift components
-    private Transform lift;
-    private Rigidbody vehicleRb;
+    //movement
+    [SerializeField] private float speed = 10f;
+    [SerializeField] private float acceleration = 5f;
+    [SerializeField] private float deceleration = 10f;
+    private float currentSpeed = 0f;
 
+    //steering
+    [SerializeField] private float turnSpeed = 50;
+    [SerializeField] private float steeringAdaptSpeed = 3f;
+    private float targetSteeringDirection = 1f;
+    private float currentSteeringDirection = 1f;
+
+    //lift
+    [SerializeField] private Transform lift;
+    [SerializeField] private float liftSpeed = 3f;
+    private float initialLiftY;
     private float maxLiftHeight = 6;
     private float minLiftHeight = -0.8f;
-    private float liftSpeed = 3f;
 
-    private float initialLiftY;
-    private float lastLiftY;
-
-    private Vector3 currentMovementVelocity;
-    private Vector3 lastPosition;
+    //references
+    private Rigidbody vehicleRb;
     private Rigidbody attachedPallet;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        lift = transform.Find("Lift");
         vehicleRb = GetComponent<Rigidbody>();
         initialLiftY = lift.localPosition.y;
-        lastLiftY = lift.localPosition.y;
-
-        lastPosition = vehicleRb.position;
     }
 
     // Update is called once per frame
@@ -41,33 +44,51 @@ public class Movement : MonoBehaviour
         forwardInput = Input.GetAxis("Vertical");
 
         //move the vehicle forward
-        Vector3 movement = transform.forward * speed * forwardInput;
+        float targetSpeed = speed * forwardInput;
+        if (Mathf.Abs(forwardInput) > INPUT_THRESHOLD)
+        {
+            currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
+        } 
+        else
+        {
+            currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
+        }
+
+        Vector3 movement = transform.forward * currentSpeed;
         Vector3 newPosition = vehicleRb.position + movement * Time.fixedDeltaTime;
-
-        // Calculate movement velocity
-        currentMovementVelocity = (newPosition - lastPosition) / Time.fixedDeltaTime;
-        lastPosition = newPosition;
-
         vehicleRb.MovePosition(newPosition);
 
-        //rotate with Rigidbody
-        float rotation = turnSpeed * horizontalInput * Time.fixedDeltaTime;
+        //rotate the vehicle
+        if (forwardInput > INPUT_THRESHOLD)
+        {
+            targetSteeringDirection = 1f; //normal
+        }
+        else if (forwardInput < -INPUT_THRESHOLD)
+        {
+            targetSteeringDirection = -1f; //inverted
+        }
+        currentSteeringDirection = Mathf.Lerp(currentSteeringDirection, targetSteeringDirection, steeringAdaptSpeed * Time.fixedDeltaTime);
+
+        float rotation = turnSpeed * horizontalInput * currentSteeringDirection * Time.fixedDeltaTime;
         Quaternion turnRotation = Quaternion.Euler(0f, rotation, 0f);
         vehicleRb.MoveRotation(vehicleRb.rotation * turnRotation);
 
-        //move lift up or down
+        //move lift vertically
         Vector3 localPos = lift.localPosition;
         float liftDelta = 0f;
 
         if (Input.GetKey(KeyCode.E) && localPos.y < initialLiftY + maxLiftHeight)
         {
-            lift.localPosition += Vector3.up * liftSpeed * Time.fixedDeltaTime;
             liftDelta = liftSpeed * Time.fixedDeltaTime;
         }
-        if (Input.GetKey(KeyCode.Q) && localPos.y > initialLiftY + minLiftHeight)
+        else if (Input.GetKey(KeyCode.Q) && localPos.y > initialLiftY + minLiftHeight)
         {
-            lift.localPosition += Vector3.down * liftSpeed * Time.fixedDeltaTime;
             liftDelta = -liftSpeed * Time.fixedDeltaTime;
+        }
+
+        if (liftDelta != 0f)
+        {
+            lift.localPosition += Vector3.up * liftDelta;
         }
 
         //add force to attached pallet
@@ -86,7 +107,6 @@ public class Movement : MonoBehaviour
             attachedPallet.MovePosition(newPalletPosition);
             attachedPallet.MoveRotation(attachedPallet.rotation * turnRotation);
         }
-        lastLiftY = lift.localPosition.y;
     }
 
     public void AttachPallet(Rigidbody pallet)

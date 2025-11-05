@@ -154,8 +154,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.27, y: 0.37, z: 3.79}
-  m_Center: {x: 0, y: -1.87, z: 0.69}
+  m_Size: {x: 4.27, y: 0.19, z: 3.79}
+  m_Center: {x: 0, y: -1.78, z: 0.69}
 --- !u!114 &2192353024469873764
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,6 +279,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4cee4bf4051beb248a5794edd653f624, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Movement
+  speed: 5
+  acceleration: 8
+  deceleration: 12
+  turnSpeed: 50
+  lift: {fileID: 6990198384931892068}
 --- !u!54 &8710769492643468770
 Rigidbody:
   m_ObjectHideFlags: 0
