@@ -19,6 +19,17 @@ public class Movement : MonoBehaviour
     private float targetSteeringDirection = 1f;
     private float currentSteeringDirection = 1f;
 
+    //visuals
+    [SerializeField] private float visualMaxSteeringWheelAngle = 180f;
+    [SerializeField] private float visualMaxWheelTurnAngle = 30f;
+    [SerializeField] private float wheelRadius = 0.3f;
+    private float wheelRollRotation = 0f;
+
+    [SerializeField] private Light leftReverseLight;
+    [SerializeField] private Light rightReverseLight;
+    [SerializeField] private float blinkSpeed = 2f;
+    private float blinkTimer = 0f;
+
     //lift
     [SerializeField] private Transform lift;
     [SerializeField] private float liftSpeed = 3f;
@@ -29,6 +40,12 @@ public class Movement : MonoBehaviour
     //references
     private Rigidbody vehicleRb;
     private Rigidbody attachedPallet;
+    [SerializeField] private Transform steeringWheel;
+    [SerializeField] private Transform wheelFrontLeft;
+    [SerializeField] private Transform wheelFrontRight;
+    [SerializeField] private Transform wheelBackLeft;
+    [SerializeField] private Transform wheelBackRight;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -107,6 +124,7 @@ public class Movement : MonoBehaviour
             attachedPallet.MovePosition(newPalletPosition);
             attachedPallet.MoveRotation(attachedPallet.rotation * turnRotation);
         }
+        UpdateVisuals();
     }
 
     public void AttachPallet(Rigidbody pallet)
@@ -116,5 +134,57 @@ public class Movement : MonoBehaviour
     public void DetachPallet()
     {
         attachedPallet = null;
+    }
+    private void UpdateVisuals()
+    {
+        // Rotate steering wheel based on horizontalInput
+        if (steeringWheel != null)
+        {
+            float steerAngle = horizontalInput * visualMaxSteeringWheelAngle;
+            steeringWheel.localRotation = Quaternion.Euler(0f, 0f, -steerAngle);
+        }
+
+        // calculate wheel turn angle
+        float wheelAngle = horizontalInput * visualMaxWheelTurnAngle;
+
+        // calculate roll rotation
+        if (currentSpeed != 0f)
+        {
+            float rotationSpeed = (currentSpeed / wheelRadius) * Mathf.Rad2Deg * Time.fixedDeltaTime;
+            wheelRollRotation += rotationSpeed;
+        }
+
+        // Front wheels: steering + rolling
+        if (wheelFrontLeft != null)
+            wheelFrontLeft.localRotation = Quaternion.Euler(wheelRollRotation, wheelAngle, 0f);
+        if (wheelFrontRight != null)
+            wheelFrontRight.localRotation = Quaternion.Euler(wheelRollRotation, wheelAngle, 0f);
+
+        // Back wheels: rolling
+        if (wheelBackLeft != null)
+            wheelBackLeft.localRotation = Quaternion.Euler(wheelRollRotation, 0f, 0f);
+        if (wheelBackRight != null)
+            wheelBackRight.localRotation = Quaternion.Euler(wheelRollRotation, 0f, 0f);
+
+        //reverse lights
+        bool isReversing = forwardInput < -INPUT_THRESHOLD;
+        if (isReversing)
+        {
+            blinkTimer += Time.fixedDeltaTime;
+
+            if (blinkTimer >= 1f / blinkSpeed)
+            {
+                bool lightsAreOn = leftReverseLight.enabled;
+                leftReverseLight.enabled = !lightsAreOn;
+                rightReverseLight.enabled = !lightsAreOn;
+                blinkTimer = 0f;
+            }
+        }
+        else
+        {
+            leftReverseLight.enabled = false;
+            rightReverseLight.enabled = false;
+            blinkTimer = 0f;
+        }
     }
 }
