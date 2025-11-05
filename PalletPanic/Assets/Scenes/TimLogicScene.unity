@@ -675,10 +675,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Forklift
       objectReference: {fileID: 0}
-    - target: {fileID: 8278760549658718561, guid: 5e703ce044f45c54fa07500a49445066, type: 3}
-      propertyPath: firstPersonCameraObject
-      value: 
-      objectReference: {fileID: 1012998254}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
