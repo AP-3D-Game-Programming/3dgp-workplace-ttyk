@@ -131,9 +131,13 @@ MonoBehaviour:
   greenMaterial: {fileID: 2100000, guid: c00d264ae23245244a223e59228477bc, type: 2}
   yellowMaterial: {fileID: 2100000, guid: 5b680d0f93822924288fe51102206b86, type: 2}
   cargoBarrelsPrefab: {fileID: 5318447000331156779, guid: f6ff4b50ea7c1cf428bffe323408c8b7, type: 3}
-  cargoBoxesPrefab: {fileID: 4895771337755679314, guid: 2d3ae933fdf02e84ca8762372f9d1913, type: 3}
+  cargoBoxesPrefab: {fileID: 0}
   cargoCratesPrefab: {fileID: 1843183599910109835, guid: 6e33abe2fcde9e24599cbcfb5ca62322, type: 3}
-  cargoAmpRacksPrefab: {fileID: 0}
+  cargoAmpRacksPrefab: {fileID: 1484646807911381180, guid: e0cf06ed3d9ad264a9af945ec9a3f33b, type: 3}
+  isHighlighted: 0
+  pulseSpeed: 1.5
+  glowIntensity: 2
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!65 &6650457235281701976
 BoxCollider:
   m_ObjectHideFlags: 0
