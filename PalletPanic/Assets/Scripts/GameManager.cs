@@ -102,6 +102,28 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log($"Scene {sceneName} loaded.");
+
+        yield return new WaitForSeconds(0.2f);
+
+        // Als we de IntroScene laden, spawn dan de pallet
+        if (sceneName == "IntroScene")
+        {
+            SpawnInitialObjects();
+        }
+    }
+
+    private void SpawnInitialObjects()
+    {
+        // Zoek de PalletSpawner in de geladen scene
+        if (SpawnManager.Instance != null)
+        {
+            SpawnManager.Instance.SpawnPallet();
+            Debug.Log("Pallet spawn requested in IntroScene");
+        }
+        else
+        {
+            Debug.LogWarning("PalletSpawner not found! Make sure it exists in the IntroScene.");
+        }
     }
 
     public void OnStartButtonPressed()
