@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class SceneTransitionButton : MonoBehaviour
 {
-    // Deze functie kan je koppelen aan je UI button
     public void StartGame()
     {
         if (GameManager.Instance != null)
