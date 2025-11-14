@@ -17,6 +17,7 @@ public enum CargoType
     None,
     Barrels,
     Boxes,
+    Crates,
     Drums,
     AmpRacks
 }
@@ -36,10 +37,11 @@ public class Pallet : MonoBehaviour
     public Material yellowMaterial;
 
     [Header("Cargo Prefabs")]
-    public GameObject cargoBarrelsPrefab;
-    public GameObject cargoBoxesPrefab;
-    public GameObject cargoCratesPrefab;
-    public GameObject cargoAmpRacksPrefab;
+    public GameObject Barrels;
+    public GameObject Boxes;
+    public GameObject Crates;
+    public GameObject Drums;
+    public GameObject AmpRacks;
 
     [Header("Highlight Settings")]
     public bool isHighlighted = false;
@@ -213,13 +215,15 @@ public class Pallet : MonoBehaviour
             case CargoType.None:
                 return null;
             case CargoType.Barrels:
-                return cargoBarrelsPrefab;
+                return Barrels;
             case CargoType.Boxes:
-                return cargoBoxesPrefab;
+                return Boxes;
+            case CargoType.Crates:
+                return Crates;
             case CargoType.Drums:
-                return cargoCratesPrefab;
+                return Drums;
             case CargoType.AmpRacks:
-                return cargoAmpRacksPrefab;
+                return AmpRacks;
             default:
                 return null;
         }
