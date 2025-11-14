@@ -125,10 +125,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Pallet
   palletColor: 0
+  cargoType: 0
   redMaterial: {fileID: 2100000, guid: 91513083a4a508a40a3d82890ff439d4, type: 2}
   blueMaterial: {fileID: 2100000, guid: 7b833c5fa95cca743bacfab5482ec161, type: 2}
   greenMaterial: {fileID: 2100000, guid: c00d264ae23245244a223e59228477bc, type: 2}
   yellowMaterial: {fileID: 2100000, guid: 5b680d0f93822924288fe51102206b86, type: 2}
+  Barrels: {fileID: 5318447000331156779, guid: f6ff4b50ea7c1cf428bffe323408c8b7, type: 3}
+  Boxes: {fileID: 6813379464777248953, guid: 234ae379025b8e64da4497ca4b44abcc, type: 3}
+  Crates: {fileID: 6368850742385349803, guid: 4ef81927c72feb440808a44b76c50e7e, type: 3}
+  Drums: {fileID: 1843183599910109835, guid: 6e33abe2fcde9e24599cbcfb5ca62322, type: 3}
+  AmpRacks: {fileID: 1484646807911381180, guid: e0cf06ed3d9ad264a9af945ec9a3f33b, type: 3}
+  isHighlighted: 0
+  pulseSpeed: 1.5
+  glowIntensity: 1
+  highlightColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
 --- !u!65 &6650457235281701976
 BoxCollider:
   m_ObjectHideFlags: 0
