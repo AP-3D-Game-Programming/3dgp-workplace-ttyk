@@ -1,3 +1,22 @@
+/* 
+ * // Usage
+ * Pallet pallet = somePallet.GetComponent<Pallet>();
+ * 
+ * // CargoType
+ * pallet.SetCargoType(CargoType.Barrels);
+ * 
+ * // PalletColor
+ * pallet.SetColor(PalletColor.Red);
+ * pallet.SetColor(PalletColor.Blue);
+ * 
+ * // Highlight
+ * pallet.SetHighlight(true/false);     // Enable/Disable
+ * pallet.ToggleHighlight();            // Toggle
+ * pallet.pulseSpeed = 2.5f;
+ * pallet.glowIntensity = 3.0f;
+ * pallet.highlightColor = Color.green;
+ */
+
 using UnityEngine;
 using System.Collections.Generic;
 #if UNITY_EDITOR
@@ -54,10 +73,18 @@ public class Pallet : MonoBehaviour
     private Renderer palletRenderer;
     private GameObject currentCargoInstance;
     private CargoType previousCargoType = (CargoType)(-1);
-    private List<Material> originalMaterials = new List<Material>();
-    private List<Material> highlightMaterials = new List<Material>();
-    private List<Renderer> allRenderers = new List<Renderer>();
+
+    // Pallet highlight
+    private List<Material> palletOriginalMaterials = new List<Material>();
+    private List<Material> palletHighlightMaterials = new List<Material>();
+
+    // Cargo highlight
+    private Renderer[] cargoRenderers;
+    private Material[][] cargoOriginalMaterials;
+    private Material[][] cargoHighlightMaterials;
+
     private bool wasHighlighted = false;
+    private float pulseTime = 0f;
 
     private void InitializeRenderer()
     {
@@ -88,15 +115,36 @@ public class Pallet : MonoBehaviour
             wasHighlighted = isHighlighted;
         }
 
-        if (isHighlighted && highlightMaterials.Count > 0)
+        if (isHighlighted)
         {
-            float emission = Mathf.PingPong(Time.time * pulseSpeed, 1f) * glowIntensity;
-            
-            foreach (Material mat in highlightMaterials)
+            pulseTime += Time.deltaTime * pulseSpeed;
+            float emission = Mathf.PingPong(pulseTime, 1f) * glowIntensity;
+            Color emissionColor = highlightColor * emission;
+
+            // Update pallet emission
+            foreach (Material mat in palletHighlightMaterials)
             {
                 if (mat != null)
                 {
-                    mat.SetColor("_EmissionColor", highlightColor * emission);
+                    mat.SetColor("_EmissionColor", emissionColor);
+                }
+            }
+
+            // Update cargo emission
+            if (cargoHighlightMaterials != null)
+            {
+                foreach (Material[] mats in cargoHighlightMaterials)
+                {
+                    if (mats != null)
+                    {
+                        foreach (Material mat in mats)
+                        {
+                            if (mat != null)
+                            {
+                                mat.SetColor("_EmissionColor", emissionColor);
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -107,11 +155,9 @@ public class Pallet : MonoBehaviour
         InitializeRenderer();
         ApplyMaterial();
 
-        // Check of cargo type is gewijzigd
         if (previousCargoType != cargoType)
         {
 #if UNITY_EDITOR
-            // Gebruik altijd EditorApplication.delayCall om Instantiate uit te stellen
             CargoType targetType = cargoType;
             EditorApplication.delayCall += () =>
             {
@@ -158,7 +204,7 @@ public class Pallet : MonoBehaviour
     {
         RemoveCurrentCargo();
         InstantiateNewCargo();
-        SetupHighlight(); // Update highlight na cargo wijziging
+        SetupHighlight();
 
 #if UNITY_EDITOR
         if (!Application.isPlaying)
@@ -177,6 +223,34 @@ public class Pallet : MonoBehaviour
             currentCargoInstance = Instantiate(cargoPrefab, transform);
             currentCargoInstance.transform.localPosition = Vector3.zero;
             currentCargoInstance.transform.localRotation = Quaternion.identity;
+
+            // Verzamel cargo renderers
+            cargoRenderers = currentCargoInstance.GetComponentsInChildren<Renderer>();
+            StoreCargoOriginalMaterials();
+        }
+        else
+        {
+            cargoRenderers = null;
+            cargoOriginalMaterials = null;
+        }
+    }
+
+    private void StoreCargoOriginalMaterials()
+    {
+        if (cargoRenderers == null || cargoRenderers.Length == 0)
+        {
+            cargoOriginalMaterials = null;
+            return;
+        }
+
+        cargoOriginalMaterials = new Material[cargoRenderers.Length][];
+
+        for (int i = 0; i < cargoRenderers.Length; i++)
+        {
+            if (cargoRenderers[i] != null)
+            {
+                cargoOriginalMaterials[i] = cargoRenderers[i].sharedMaterials;
+            }
         }
     }
 
@@ -206,6 +280,8 @@ public class Pallet : MonoBehaviour
         }
 
         currentCargoInstance = null;
+        cargoRenderers = null;
+        cargoOriginalMaterials = null;
     }
 
     private GameObject GetPrefabForCargoType(CargoType type)
@@ -248,63 +324,165 @@ public class Pallet : MonoBehaviour
 
     private void SetupHighlight()
     {
-        // Verzamel alle renderers (pallet + cargo + alle nested children)
-        allRenderers.Clear();
-        allRenderers.AddRange(GetComponentsInChildren<Renderer>(true)); // true = include inactive
-
-        // Clear oude materials
-        originalMaterials.Clear();
-        highlightMaterials.Clear();
+        pulseTime = 0f;
 
         if (isHighlighted)
         {
-            // Maak highlight materials voor alle renderers
-            foreach (Renderer rend in allRenderers)
-            {
-                if (rend != null && rend.sharedMaterials != null)
-                {
-                    // Maak kopieën voor highlight
-                    Material[] newMaterials = new Material[rend.sharedMaterials.Length];
-                    for (int i = 0; i < rend.sharedMaterials.Length; i++)
-                    {
-                        if (rend.sharedMaterials[i] != null)
-                        {
-                            newMaterials[i] = new Material(rend.sharedMaterials[i]);
-                            newMaterials[i].EnableKeyword("_EMISSION");
-                            newMaterials[i].globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
-                            highlightMaterials.Add(newMaterials[i]);
-                        }
-                    }
-                    rend.materials = newMaterials;
-                }
-            }
+            EnablePalletHighlight();
+            EnableCargoHighlight();
         }
         else
         {
-            // Reset naar originele state door alle renderers te resetten
-            foreach (Renderer rend in allRenderers)
-            {
-                if (rend != null && rend.sharedMaterials != null)
-                {
-                    Material[] resetMaterials = new Material[rend.sharedMaterials.Length];
-                    for (int i = 0; i < rend.sharedMaterials.Length; i++)
-                    {
-                        resetMaterials[i] = rend.sharedMaterials[i];
-                    }
-                    rend.materials = resetMaterials;
-                }
-            }
-            
-            // Forceer material refresh van het pallet zelf
-            ApplyMaterial();
+            DisablePalletHighlight();
+            DisableCargoHighlight();
         }
 
         wasHighlighted = isHighlighted;
     }
 
+    private void EnablePalletHighlight()
+    {
+        palletOriginalMaterials.Clear();
+        palletHighlightMaterials.Clear();
+
+        if (palletRenderer != null && palletRenderer.sharedMaterials != null)
+        {
+            Material[] newMaterials = new Material[palletRenderer.sharedMaterials.Length];
+
+            for (int i = 0; i < palletRenderer.sharedMaterials.Length; i++)
+            {
+                if (palletRenderer.sharedMaterials[i] != null)
+                {
+                    palletOriginalMaterials.Add(palletRenderer.sharedMaterials[i]);
+
+                    newMaterials[i] = new Material(palletRenderer.sharedMaterials[i]);
+                    newMaterials[i].EnableKeyword("_EMISSION");
+                    newMaterials[i].globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                    palletHighlightMaterials.Add(newMaterials[i]);
+                }
+            }
+
+            palletRenderer.materials = newMaterials;
+        }
+    }
+
+    private void DisablePalletHighlight()
+    {
+        if (palletRenderer != null && palletOriginalMaterials.Count > 0)
+        {
+            palletRenderer.materials = palletOriginalMaterials.ToArray();
+        }
+
+        palletHighlightMaterials.Clear();
+        ApplyMaterial();
+    }
+
+    private void EnableCargoHighlight()
+    {
+        if (cargoRenderers == null || cargoRenderers.Length == 0 || cargoOriginalMaterials == null)
+            return;
+
+        Shader litShader = Shader.Find("Universal Render Pipeline/Lit");
+        if (litShader == null)
+        {
+            Debug.LogWarning("URP/Lit shader niet gevonden! Cargo highlight werkt niet.");
+            return;
+        }
+
+        cargoHighlightMaterials = new Material[cargoRenderers.Length][];
+
+        for (int i = 0; i < cargoRenderers.Length; i++)
+        {
+            if (cargoRenderers[i] != null && cargoOriginalMaterials[i] != null)
+            {
+                Material[] newMats = new Material[cargoOriginalMaterials[i].Length];
+
+                for (int j = 0; j < cargoOriginalMaterials[i].Length; j++)
+                {
+                    if (cargoOriginalMaterials[i][j] != null)
+                    {
+                        Material newMat = new Material(litShader);
+
+                        // Kopieer basis eigenschappen
+                        if (cargoOriginalMaterials[i][j].HasProperty("_BaseColor"))
+                        {
+                            newMat.SetColor("_BaseColor", cargoOriginalMaterials[i][j].GetColor("_BaseColor"));
+                        }
+                        else if (cargoOriginalMaterials[i][j].HasProperty("_Color"))
+                        {
+                            newMat.SetColor("_BaseColor", cargoOriginalMaterials[i][j].GetColor("_Color"));
+                        }
+
+                        if (cargoOriginalMaterials[i][j].mainTexture != null)
+                        {
+                            newMat.mainTexture = cargoOriginalMaterials[i][j].mainTexture;
+                        }
+
+                        // Setup emission
+                        newMat.EnableKeyword("_EMISSION");
+                        newMat.globalIlluminationFlags = MaterialGlobalIlluminationFlags.RealtimeEmissive;
+                        newMat.SetColor("_EmissionColor", highlightColor * glowIntensity);
+
+                        newMats[j] = newMat;
+                    }
+                }
+
+                cargoHighlightMaterials[i] = newMats;
+                cargoRenderers[i].materials = newMats;
+            }
+        }
+    }
+
+    private void DisableCargoHighlight()
+    {
+        if (cargoRenderers == null || cargoOriginalMaterials == null)
+            return;
+
+        for (int i = 0; i < cargoRenderers.Length; i++)
+        {
+            if (cargoRenderers[i] != null && cargoOriginalMaterials[i] != null)
+            {
+                cargoRenderers[i].materials = cargoOriginalMaterials[i];
+            }
+        }
+
+        // Clean up highlight materials
+        if (cargoHighlightMaterials != null)
+        {
+            foreach (Material[] mats in cargoHighlightMaterials)
+            {
+                if (mats != null)
+                {
+                    foreach (Material mat in mats)
+                    {
+                        if (mat != null)
+                        {
+                            if (Application.isPlaying)
+                                Destroy(mat);
+                            else
+                                DestroyImmediate(mat);
+                        }
+                    }
+                }
+            }
+            cargoHighlightMaterials = null;
+        }
+    }
+
+    private void OnDestroy()
+    {
+        DisableCargoHighlight();
+    }
+
     public void SetHighlight(bool highlight)
     {
         isHighlighted = highlight;
+        SetupHighlight();
+    }
+
+    public void ToggleHighlight()
+    {
+        isHighlighted = !isHighlighted;
         SetupHighlight();
     }
 }
