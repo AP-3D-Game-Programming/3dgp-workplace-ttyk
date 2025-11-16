@@ -9,6 +9,12 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene("Level0");
     }
 
+    public void ReturnToMenu()
+    {
+        SceneManager.UnloadSceneAsync("Level0");
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
+    }
+
     public void QuitGame()
     {
         #if UNITY_EDITOR

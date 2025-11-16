@@ -1,6 +1,6 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class ForkliftController : MonoBehaviour
 {
     //input
     private float horizontalInput;
@@ -46,15 +46,14 @@ public class Movement : MonoBehaviour
     [SerializeField] private Transform wheelBackLeft;
     [SerializeField] private Transform wheelBackRight;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         vehicleRb = GetComponent<Rigidbody>();
         initialLiftY = lift.localPosition.y;
+
+        Debug.Log("ForkliftController: Start() called");
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         horizontalInput = Input.GetAxis("Horizontal");
@@ -65,7 +64,7 @@ public class Movement : MonoBehaviour
         if (Mathf.Abs(forwardInput) > INPUT_THRESHOLD)
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, targetSpeed, acceleration * Time.fixedDeltaTime);
-        } 
+        }
         else
         {
             currentSpeed = Mathf.MoveTowards(currentSpeed, 0f, deceleration * Time.fixedDeltaTime);
@@ -78,11 +77,11 @@ public class Movement : MonoBehaviour
         //rotate the vehicle
         if (forwardInput > INPUT_THRESHOLD)
         {
-            targetSteeringDirection = 1f; //normal
+            targetSteeringDirection = 1f;
         }
         else if (forwardInput < -INPUT_THRESHOLD)
         {
-            targetSteeringDirection = -1f; //inverted
+            targetSteeringDirection = -1f;
         }
         currentSteeringDirection = Mathf.Lerp(currentSteeringDirection, targetSteeringDirection, steeringAdaptSpeed * Time.fixedDeltaTime);
 
@@ -115,7 +114,6 @@ public class Movement : MonoBehaviour
             Vector3 rotatedOffset = turnRotation * offset;
             Vector3 newPalletPosition = newPosition + rotatedOffset + movement * Time.fixedDeltaTime;
 
-            //update lift movement to pallet position
             if (liftDelta != 0f)
             {
                 newPalletPosition += transform.up * liftDelta;
@@ -124,61 +122,52 @@ public class Movement : MonoBehaviour
             attachedPallet.MovePosition(newPalletPosition);
             attachedPallet.MoveRotation(attachedPallet.rotation * turnRotation);
         }
+
         UpdateVisuals();
     }
+
+    /// <summary>
+    /// Probeer camera te verbinden met retry logic
+    /// </summary>
 
     public void AttachPallet(Rigidbody pallet)
     {
         attachedPallet = pallet;
-
-        //if (TutorialManager.Instance != null)
-        //{
-        //    TutorialManager.Instance.OnPalletPickedUp();
-        //    Debug.Log("Notified TutorialManager: Pallet picked up");
-        //}
+        Debug.Log("Pallet attached to forklift");
     }
+
     public void DetachPallet()
     {
         attachedPallet = null;
-
-        //if (TutorialManager.Instance != null)
-        //{
-        //    TutorialManager.Instance.OnPalletReleased();
-        //    Debug.Log("Notified TutorialManager: Pallet released");
-        //}
+        Debug.Log("Pallet detached from forklift");
     }
+
     private void UpdateVisuals()
     {
-        // Rotate steering wheel based on horizontalInput
         if (steeringWheel != null)
         {
             float steerAngle = horizontalInput * visualMaxSteeringWheelAngle;
             steeringWheel.localRotation = Quaternion.Euler(0f, 0f, -steerAngle);
         }
 
-        // calculate wheel turn angle
         float wheelAngle = horizontalInput * visualMaxWheelTurnAngle;
 
-        // calculate roll rotation
         if (currentSpeed != 0f)
         {
             float rotationSpeed = (currentSpeed / wheelRadius) * Mathf.Rad2Deg * Time.fixedDeltaTime;
             wheelRollRotation += rotationSpeed;
         }
 
-        // Front wheels: steering + rolling
         if (wheelFrontLeft != null)
             wheelFrontLeft.localRotation = Quaternion.Euler(wheelRollRotation, wheelAngle, 0f);
         if (wheelFrontRight != null)
             wheelFrontRight.localRotation = Quaternion.Euler(wheelRollRotation, wheelAngle, 0f);
 
-        // Back wheels: rolling
         if (wheelBackLeft != null)
             wheelBackLeft.localRotation = Quaternion.Euler(wheelRollRotation, 0f, 0f);
         if (wheelBackRight != null)
             wheelBackRight.localRotation = Quaternion.Euler(wheelRollRotation, 0f, 0f);
 
-        //reverse lights
         bool isReversing = forwardInput < -INPUT_THRESHOLD;
         if (isReversing)
         {

@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class ForkTrigger : MonoBehaviour
 {
-    private Movement forkliftMovement;
+    private ForkliftController forkliftMovement;
     private Rigidbody currentPallet;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        forkliftMovement = GetComponentInParent<Movement>();
+        forkliftMovement = GetComponentInParent<ForkliftController>();
 
         if (forkliftMovement == null)
         {
