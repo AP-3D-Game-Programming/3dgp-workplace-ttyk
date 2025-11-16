@@ -131,21 +131,21 @@ public class Movement : MonoBehaviour
     {
         attachedPallet = pallet;
 
-        if (TutorialManager.Instance != null)
-        {
-            TutorialManager.Instance.OnPalletPickedUp();
-            Debug.Log("Notified TutorialManager: Pallet picked up");
-        }
+        //if (TutorialManager.Instance != null)
+        //{
+        //    TutorialManager.Instance.OnPalletPickedUp();
+        //    Debug.Log("Notified TutorialManager: Pallet picked up");
+        //}
     }
     public void DetachPallet()
     {
         attachedPallet = null;
 
-        if (TutorialManager.Instance != null)
-        {
-            TutorialManager.Instance.OnPalletReleased();
-            Debug.Log("Notified TutorialManager: Pallet released");
-        }
+        //if (TutorialManager.Instance != null)
+        //{
+        //    TutorialManager.Instance.OnPalletReleased();
+        //    Debug.Log("Notified TutorialManager: Pallet released");
+        //}
     }
     private void UpdateVisuals()
     {
