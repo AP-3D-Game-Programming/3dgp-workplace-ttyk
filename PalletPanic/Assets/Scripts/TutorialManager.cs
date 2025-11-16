@@ -10,6 +10,7 @@ public class TutorialManager : MonoBehaviour
     [SerializeField] private GameObject tutorialPanel;
     [SerializeField] private TextMeshProUGUI instructionText;
     [SerializeField] private GameObject completionCheckmark;
+    [SerializeField] private GameObject completionButtons;
 
     [Header("References")]
     [SerializeField] private Transform forklift;
@@ -18,7 +19,6 @@ public class TutorialManager : MonoBehaviour
 
     [Header("Settings")]
     [SerializeField] private float requiredDistance = 4f;
-    [SerializeField] private float shelfDetectionRadius = 2f;
 
     private enum TutorialStep
     {
@@ -36,6 +36,7 @@ public class TutorialManager : MonoBehaviour
     private TutorialStep currentStep = TutorialStep.Welcome;
     private bool stepCompleted = false;
     private bool palletPickedUp = false;
+    private bool palletPlacedOnce = false;
     private Vector3 startMovePos;
 
     private void Awake()
@@ -47,6 +48,7 @@ public class TutorialManager : MonoBehaviour
     private void Start()
     {
         if (tutorialPanel != null) tutorialPanel.SetActive(true);
+        if (completionButtons != null) completionButtons.SetActive(false);
         StartTutorial();
     }
 
@@ -95,6 +97,7 @@ public class TutorialManager : MonoBehaviour
     private void StartTutorial()
     {
         currentStep = TutorialStep.Welcome;
+        palletPlacedOnce = false;
         ShowInstruction("<color=#00FFFF>Welkom bij de Forklift Training!</color>\n\nDruk op <color=#FFFF00>SPATIE</color> om te beginnen.");
     }
 
@@ -145,7 +148,7 @@ public class TutorialManager : MonoBehaviour
 
             case TutorialStep.Complete:
                 ShowInstruction("<color=#00FF00>Tutorial voltooid!</color>\nJe bent nu klaar om als heftruckchauffeur aan de slag te gaan!");
-                StartCoroutine(FinishTutorial());
+                StartCoroutine(ShowCompletionButtons());
                 break;
         }
     }
@@ -229,19 +232,76 @@ public class TutorialManager : MonoBehaviour
 
     private void CheckPalletPlacement()
     {
-        if (forklift == null || targetShelf == null) return;
-        float distance = Vector3.Distance(forklift.position, targetShelf.position);
-        if (distance < shelfDetectionRadius && !palletPickedUp)
-            CompleteStep();
+        if (!palletPickedUp && !palletPlacedOnce)
+        {
+            palletPlacedOnce = true;
+            ShowInstruction("<color=#00FF00>Pallet neergezet!</color>\n\nEven controleren...");
+            StartCoroutine(DelayedCompletion());
+        }
     }
 
     public void OnPalletPickedUp() => palletPickedUp = true;
     public void OnPalletReleased() => palletPickedUp = false;
 
-    private IEnumerator FinishTutorial()
+    private IEnumerator DelayedCompletion()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
+        CompleteStep();
+    }
+
+    private IEnumerator ShowCompletionButtons()
+    {
+        yield return new WaitForSeconds(1f);
+
+        if (completionButtons != null)
+        {
+            completionButtons.SetActive(true);
+        }
+
+        if (instructionText != null)
+            instructionText.gameObject.SetActive(false);
+
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    public void OnGoToLevel1ButtonPressed()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (completionButtons != null)
+            completionButtons.SetActive(false);
+
         if (tutorialPanel != null)
             tutorialPanel.SetActive(false);
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnIntroComplete();
+        }
+    }
+
+    public void OnRestartTutorialButtonPressed()
+    {
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        if (completionButtons != null)
+            completionButtons.SetActive(false);
+
+        if (instructionText != null)
+            instructionText.gameObject.SetActive(true);
+
+        currentStep = TutorialStep.Welcome;
+        stepCompleted = false;
+        palletPickedUp = false;
+        palletPlacedOnce = false;
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.LoadIntro();
+        }
     }
 }
