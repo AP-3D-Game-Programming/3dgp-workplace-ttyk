@@ -6,45 +6,45 @@ public class LoadingZone : MonoBehaviour
     [Header("Debug")]
     [SerializeField] private bool showDebugInfo = true;
 
-    // Lijst van paletten die momenteel in de zone zijn
     private List<Pallet> palletsInZone = new List<Pallet>();
 
     private void OnTriggerEnter(Collider other)
+{
+    Pallet pallet = other.GetComponent<Pallet>();
+
+    if (pallet == null)
     {
-        // Check of het object een pallet is
-        Pallet pallet = other.GetComponent<Pallet>();
+        pallet = other.GetComponentInParent<Pallet>();
+    }
 
-        // niet gevonden --> zoek in parent
-        if (pallet == null)
+    if (pallet != null && !palletsInZone.Contains(pallet))
+    {
+        // Voeg pallet toe aan lijst (ook al is hij nog attached)
+        palletsInZone.Add(pallet);
+
+        if (showDebugInfo)
         {
-            pallet = other.GetComponentInParent<Pallet>();
+            Debug.Log($"Pallet in zone: {pallet.palletColor} (IsAttached: {pallet.IsAttached})");
         }
-
-        if (pallet != null && !palletsInZone.Contains(pallet))
+        
+        // Als pallet al los is, tel direct
+        if (!pallet.IsAttached)
         {
-            palletsInZone.Add(pallet);
-
-            if (showDebugInfo)
-            {
-                Debug.Log($"Pallet toegevoegd aan zone: {pallet.palletColor} (Totaal: {palletsInZone.Count})");
-            }
-
-            //Opdracht afgerond?
             CheckOrder();
         }
+        // Anders: wacht tot hij losgelaten wordt (zie Update)
     }
+}
+
 
     private void OnTriggerExit(Collider other)
     {
-
         Pallet pallet = other.GetComponent<Pallet>();
 
-        // niet gevonden --> zoek in parent
         if (pallet == null)
         {
             pallet = other.GetComponentInParent<Pallet>();
         }
-
 
         if (pallet != null && palletsInZone.Contains(pallet))
         {
@@ -59,16 +59,30 @@ public class LoadingZone : MonoBehaviour
 
     private void CheckOrder()
     {
-        if (OrderSystem.Instance == null || OrderSystem.Instance.currentOrder == null)
+        // MODE 1: OrderSystem (Tutorial/Complex levels)
+        if (OrderSystem.Instance != null && OrderSystem.Instance.currentOrder != null)
         {
-            Debug.LogWarning("Geen actieve opdracht!");
+            CheckOrderSystemMode();
             return;
         }
+        
+        // MODE 2: Level1Manager (Simple levels)
+        if (Level1Manager.Instance != null)
+        {
+            CheckSimpleMode();
+            return;
+        }
+        
+        if (showDebugInfo)
+        {
+            Debug.LogWarning("Geen OrderSystem of Level1Manager gevonden!");
+        }
+    }
 
-        //we hebben maar 1 stapel in de opdracht
+    private void CheckOrderSystemMode()
+    {
         PalletStackOrder requiredStack = OrderSystem.Instance.currentOrder.stacks[0];
 
-        //check aantal paletten
         if (palletsInZone.Count != requiredStack.colors.Count)
         {
             if (showDebugInfo)
@@ -78,7 +92,6 @@ public class LoadingZone : MonoBehaviour
             return;
         }
 
-        // Check kleuren (simpele versie: telt alleen of de juiste kleuren aanwezig zijn)
         List<PalletColor> requiredColors = new List<PalletColor>(requiredStack.colors);
         List<PalletColor> deliveredColors = new List<PalletColor>();
 
@@ -87,7 +100,6 @@ public class LoadingZone : MonoBehaviour
             deliveredColors.Add(pallet.palletColor);
         }
 
-        // Check of alle benodigde kleuren aanwezig zijn
         foreach (PalletColor color in requiredColors)
         {
             if (deliveredColors.Contains(color))
@@ -104,12 +116,27 @@ public class LoadingZone : MonoBehaviour
             }
         }
 
-        // Alle checks geslaagd
         Debug.Log("Opdracht voltooid!");
         OrderSystem.Instance.OnOrderCompleted?.Invoke();
     }
 
-    // Toon alle paletten die in de zone zijn
+    private void CheckSimpleMode()
+    {
+        if (palletsInZone.Count > 0)
+        {
+            Pallet pallet = palletsInZone[0];
+            palletsInZone.RemoveAt(0);
+            
+            Level1Manager.Instance.OnPalletDelivered();
+            Destroy(pallet.gameObject, 0.5f);
+            
+            if (showDebugInfo)
+            {
+                Debug.Log($"Pallet geleverd! Nog {palletsInZone.Count} in zone.");
+            }
+        }
+    }
+
     [ContextMenu("Show Pallets In Zone")]
     public void ShowPalletsInZone()
     {
@@ -120,10 +147,25 @@ public class LoadingZone : MonoBehaviour
         }
     }
 
-
-    // Later te gebruiken voor de check
     public List<Pallet> GetPalletsInZone()
     {
         return new List<Pallet>(palletsInZone);
     }
+
+    private void Update()
+{
+    // Check of pallets in zone losgelaten zijn
+    for (int i = palletsInZone.Count - 1; i >= 0; i--)
+    {
+        Pallet pallet = palletsInZone[i];
+        
+        if (pallet != null && !pallet.IsAttached)
+        {
+            // Pallet is losgelaten! Check order
+            CheckOrder();
+            break; // Check alleen 1 pallet per frame
+        }
+    }
+}
+
 }
