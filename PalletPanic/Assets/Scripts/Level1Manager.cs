@@ -46,21 +46,37 @@ public class Level1Manager : MonoBehaviour
             Debug.LogError("Pallet Prefab niet ingesteld!");
             return;
         }
-        
+
         if (spawnPoints == null || spawnPoints.Length == 0)
         {
             Debug.LogError("Geen spawn points ingesteld!");
             return;
         }
-        
+
+        // Array van kleuren die we willen
+        PalletColor[] colors = { 
+            PalletColor.Red, 
+            PalletColor.Blue, 
+            PalletColor.Green, 
+            PalletColor.Yellow 
+        };
+
         int spawnCount = Mathf.Min(palletsToSpawn, spawnPoints.Length);
-        
+
         for (int i = 0; i < spawnCount; i++)
         {
             if (spawnPoints[i] != null)
             {
-                Instantiate(palletPrefab, spawnPoints[i].position, Quaternion.identity);
-                Debug.Log($"Pallet {i+1} gespawned op {spawnPoints[i].name}");
+                GameObject pallet = Instantiate(palletPrefab, spawnPoints[i].position, Quaternion.identity);
+
+                // Geef elke pallet een andere kleur
+                Pallet palletScript = pallet.GetComponent<Pallet>();
+                if (palletScript != null)
+                {
+                    palletScript.SetColor(colors[i % colors.Length]);
+                }
+
+                Debug.Log($"Pallet {i+1} gespawned: {colors[i % colors.Length]}");
             }
         }
     }
