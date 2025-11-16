@@ -122,18 +122,58 @@ public class LoadingZone : MonoBehaviour
 
     private void CheckSimpleMode()
     {
-        if (palletsInZone.Count > 0)
+        List<Pallet> detachedPallets = new List<Pallet>();
+        
+        foreach (Pallet pallet in palletsInZone)
         {
-            Pallet pallet = palletsInZone[0];
-            palletsInZone.RemoveAt(0);
-            
-            Level1Manager.Instance.OnPalletDelivered();
-            Destroy(pallet.gameObject, 0.5f);
-            
-            if (showDebugInfo)
+            if (pallet != null && !pallet.IsAttached)
             {
-                Debug.Log($"Pallet geleverd! Nog {palletsInZone.Count} in zone.");
+                detachedPallets.Add(pallet);
             }
+        }
+        
+        if (detachedPallets.Count > 0)
+        {
+            Pallet pallet = detachedPallets[0];
+            
+            // EXTRA DEBUG
+            Debug.Log($"[CheckSimpleMode] Checking pallet: {pallet.palletColor}");
+            
+            if (Level1Manager.Instance == null)
+            {
+                Debug.LogError("Level1Manager.Instance is null!");
+                return;
+            }
+            
+            // EXTRA DEBUG
+            Debug.Log("[CheckSimpleMode] Calling IsPalletCorrect...");
+            bool isCorrect = Level1Manager.Instance.IsPalletCorrect(pallet);
+            Debug.Log($"[CheckSimpleMode] Result: {isCorrect}");
+            
+            if (isCorrect)
+            {
+                palletsInZone.Remove(pallet);
+                
+                if (showDebugInfo)
+                {
+                    Debug.Log($"Correcte pallet geleverd! +{Level1Manager.Instance.pointsPerPallet} punten");
+                }
+                
+                Level1Manager.Instance.OnPalletDelivered(pallet);
+                Destroy(pallet.gameObject, 0.5f);
+            }
+            else
+            {
+                if (showDebugInfo)
+                {
+                    Debug.Log($"Verkeerde pallet! Deze telt niet.");
+                }
+            }
+        }
+        else
+        {
+            // EXTRA DEBUG
+            Debug.Log("[CheckSimpleMode] No detached pallets in zone.");
         }
     }
 
