@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
+        SceneManager.LoadScene("Loading", LoadSceneMode.Additive);
     }
     // public enum GameState { MainMenu, Intro, Level1 }
     // public GameState CurrentState { get; private set; }
