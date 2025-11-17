@@ -45,6 +45,10 @@ public class Pallet : MonoBehaviour
 {
     [Header("Pallet Settings")]
     public PalletColor palletColor;
+    
+    // Track if pallet is attached to forklift
+    private bool isAttached = false;
+    public bool IsAttached => isAttached;
 
     [Header("Cargo Settings")]
     public CargoType cargoType = CargoType.None;
@@ -484,5 +488,19 @@ public class Pallet : MonoBehaviour
     {
         isHighlighted = !isHighlighted;
         SetupHighlight();
+    }
+    
+    // Called when pallet is picked up by forklift
+    public void OnPickedUp()
+    {
+        isAttached = true;
+        Debug.Log("Pallet opgepakt - IsAttached = true");
+    }
+
+    // Called when pallet is released from forklift
+    public void OnReleased()
+    {
+        isAttached = false;
+        Debug.Log("Pallet losgelaten - IsAttached = false");
     }
 }

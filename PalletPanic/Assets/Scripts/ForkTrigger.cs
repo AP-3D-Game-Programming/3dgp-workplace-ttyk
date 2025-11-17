@@ -1,14 +1,13 @@
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ForkTrigger : MonoBehaviour
 {
-    private Movement forkliftMovement;
+    private ForkliftController forkliftMovement;
     private Rigidbody currentPallet;
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        forkliftMovement = GetComponentInParent<Movement>();
+        forkliftMovement = GetComponentInParent<ForkliftController>();
 
         if (forkliftMovement == null)
         {
@@ -25,6 +24,13 @@ public class ForkTrigger : MonoBehaviour
             {
                 currentPallet = palletRb;
                 forkliftMovement.AttachPallet(palletRb);
+                
+                // NIEUW: Roep OnPickedUp aan op Pallet script
+                Pallet palletScript = palletRb.GetComponent<Pallet>();
+                if (palletScript != null)
+                {
+                    palletScript.OnPickedUp();
+                }
             }
             else
             {
@@ -32,10 +38,18 @@ public class ForkTrigger : MonoBehaviour
             }
         }
     }
+    
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Pallet") && other.GetComponent<Rigidbody>() == currentPallet)
         {
+            // NIEUW: Roep OnReleased aan op Pallet script
+            Pallet palletScript = other.GetComponent<Pallet>();
+            if (palletScript != null)
+            {
+                palletScript.OnReleased();
+            }
+            
             forkliftMovement.DetachPallet();
             currentPallet = null;
         }
