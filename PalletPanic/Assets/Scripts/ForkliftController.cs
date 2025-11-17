@@ -59,6 +59,15 @@ public class ForkliftController : MonoBehaviour
         horizontalInput = Input.GetAxis("Horizontal");
         forwardInput = Input.GetAxis("Vertical");
 
+        // TEST: Druk P om score te verhogen
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            if (ScoreManager.Instance != null)
+            {
+                ScoreManager.Instance.AddScore(10);
+            }
+        }
+
         //move the vehicle forward
         float targetSpeed = speed * forwardInput;
         if (Mathf.Abs(forwardInput) > INPUT_THRESHOLD)
